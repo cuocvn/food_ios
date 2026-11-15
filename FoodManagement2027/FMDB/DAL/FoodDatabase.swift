@@ -162,9 +162,16 @@ class FoodDatabase {
                         if !strImage.isEmpty {
                             // B1. Chuyen String thanh Data
                             let data = Data(base64Encoded: strImage, options: .ignoreUnknownCharacters)
+                            // B2. Chuyen data thanh UIImage
+                            image = UIImage(data: data!)
                         }
                     }
                     let rating = result.int(forColumn: MEAL_RATING)
+                    
+                    // Tao mon an va cap nhat danh sach tra ve
+                    if let meal = Meal(name: name, image: image, rating: Int(rating)) {
+                        list.append(meal)
+                    }
                 }
             }
         }
