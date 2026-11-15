@@ -16,6 +16,7 @@ class MealListController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var navigationBar: UINavigationBar!
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -86,9 +87,69 @@ extension MealListController: UITableViewDelegate, UITableViewDataSource {
             tableView.deleteRows(at: [indexPath], with: .fade)
         }
     }
-    
+                
     // MARK: Quay ve tu man hinh DetailController
     @IBAction func unwindFromDetailController(segue: UIStoryboardSegue) {
-        print("Quay ve tu DetailController")
+    //print("Quay ve tu DetailController")
+    //3. cap nhat mon an tu man hinh meal detail ve
+    //lay toan bo man hinh mealdetail va lay gia tri vua tao
+    if let mealDetailController = segue.source as? MealDetailController, let meal = mealDetailController.meal {
+                        
+        //cap nhat tableView
+        //3.1 tim vi tri de chen man an moi trong tableview
+        let newIndexPath = IndexPath(row: mealList.count, section: 0)
+        //3.2 dua mon an moi vao mealList
+        mealList.append(meal)
+        //3.3 capnhat len tableView
+        tableView.insertRows(at: [newIndexPath], with: .fade)
+        }
+    }
+    
+    // Xy li truoc khi chuyen man hinh
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Xu li callBack tu man hinh b
+        if let detailController = segue.destination as? MealDetailController {
+            detailController.getBackData = { (meal:Meal) in
+                //cap nhat tableView
+                //3.1 tim vi tri de chen mon an moi trong tableview
+                let newIndexPath = IndexPath(row: self.mealList.count, section: 0)
+                //3.2 dua mon an moi vao mealList
+                self.mealList.append(meal)
+                //3.3 capnhat len tableView
+                self.tableView.insertRows(at: [newIndexPath], with: .fade)
+            }
+        }
+    }
+    
+    
+    
+    // Xu li chuyen man hinh khi edit mon an
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        //bo chon moi khi select row
+        tableView.deselectRow(at: indexPath, animated: true)
+        
+        // 1. lay bien meal trong duoc chon
+        let meal = mealList[indexPath.row]
+        
+        // 2.1 Tao man hinh detail bang cong cu storyboard (ho tro cac dinh danh MealDetailController / MealDetailID)
+        let identifier = "MealDetailController"
+        if let mealDetail = (self.storyboard?.instantiateViewController(withIdentifier: identifier)
+            ?? self.storyboard?.instantiateViewController(withIdentifier: "MealDetailID")
+            ?? self.storyboard?.instantiateViewController(withIdentifier: "MealDetailiD")) as? MealDetailController {
+            //2.2 Truyen tham so cho man hinh detail
+            mealDetail.meal = meal
+            
+            // 2.3 lay du lieu ve tu detail
+            mealDetail.getBackData = { (newMeal:Meal) in
+                // dua meal moi vao data source
+                self.mealList[indexPath.row] = newMeal
+                // cap nhat lai tren tableView
+                self.tableView.reloadRows(at: [indexPath], with: .fade)
+            }
+            
+            // 3. Chuyen man hinh sang mealDetail Controller
+            mealDetail.modalPresentationStyle = .fullScreen
+            present(mealDetail, animated: true)
+        }
     }
 }

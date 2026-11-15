@@ -12,11 +12,27 @@ class MealDetailController: UIViewController, UITextFieldDelegate {
     //MARK: Properties
     @IBOutlet weak var Imager: UIImageView!
     @IBOutlet weak var edtMealName: UITextField!
+    @IBOutlet weak var mealRating: UIRating!
+    @IBOutlet weak var navigationBar: UINavigationBar?
+    //bien dung de truyen tham so meal giua man hinh a va b
+    var meal:Meal?
+    
+    //Dinh nghia calllBack quay ve man hinh A
+    var getBackData:((Meal)-> Void)?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         //B3. Thuc hien ham uy quyen cho doi tuong TextField
         edtMealName.delegate = self
+        
+        if let meal = meal {
+            if let naviItem = navigationBar?.topItem {
+                naviItem.title = meal.name
+            }
+            edtMealName.text = meal.name
+            Imager.image = meal.image
+            mealRating.rating = meal.rating
+        }
     }
 
     //MARK: Dinh nghia cac ham uy quyen cho doi tuong TextField
@@ -53,10 +69,27 @@ class MealDetailController: UIViewController, UITextFieldDelegate {
         // Chuyen dieu khien sang man hinh imagePicker
         present(imagePicker, animated: true)
     }
-    
+                     
     //MARK: Navigation
     
     @IBAction func cancel(_ sender: UIBarButtonItem) {
+        dismiss(animated: true)
+    }
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Xu li callBack tu man hinh b
+        
+    }
+    
+    //Tao moi mon an va quay ve man hinh a
+    @IBAction func save(_ sender: UIBarButtonItem) {
+        // 1.tao mon an tu thong tin nguoi dung nhap vao
+        let name = edtMealName.text ?? ""
+        if let meal = Meal(name: name, image: Imager.image, rating: mealRating.rating) {
+            self.meal = meal
+            // Goi callBack de truyen du lieu nguoc ve A
+            getBackData?(meal)
+        }
+        //an man hinh hien tai
         dismiss(animated: true)
     }
 }
