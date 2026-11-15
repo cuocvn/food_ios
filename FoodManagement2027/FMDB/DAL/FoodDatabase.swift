@@ -153,7 +153,11 @@ class FoodDatabase {
             
             // Xu ly du lieu doc ve
             if let result = result {
-                
+                while result.next() {
+                    let name = result.string(forColumn: MEAL_NAME) ?? ""
+                    let strImage = result.string(forColumn: MEAL_IMAGE)
+                    let rating = result.int(forColumn: MEAL_RATING)
+                }
             }
         }
     }
