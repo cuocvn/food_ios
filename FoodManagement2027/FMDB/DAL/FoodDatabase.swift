@@ -33,44 +33,44 @@ class FoodDatabase {
             "\(MEAL_IMAGE) TEXT, " +
             "\(MEAL_RATING) INTEGER)"
             //1.2 goi ham tao bang
-            createTable(sql: sql, tableName: TABLE_MEAL_NAME)
+            let _ = createTable(sql: sql, tableName: TABLE_MEAL_NAME)
         }
         else {
             os_log("Khong the khoi tao csdl: \(self.DB_PATH!)")
         }
     }
     
-    ///MARK: dinh nghia cac thuoc tinh cua bang du lieu
-    // bang 1 bang meals
+    /////////////////////////////////////////////////////////////////////////////////////////////
+    //MARK: Dinh nghia cac thuoc tinh co ban cho cac bang du lieu
+    /////////////////////////////////////////////////////////////////////////////////////////////
+    // Bang 1: Bang meals
     private let TABLE_MEAL_NAME = "meals"
     private let MEAL_ID = "_id"
     private let MEAL_NAME = "name"
     private let MEAL_IMAGE = "image"
     private let MEAL_RATING = "rating"
+    /////////////////////////////////////////////////////////////////////////////////////////////
+    //MARK: Dinh nghia cac primitives cua CSDL
+    /////////////////////////////////////////////////////////////////////////////////////////////
     
-    ///MARK: Dinh nghia cac primitives cua csdl
-    // 1. Ham mo CSDL
+    // 1. Mo CSDL
     private func openDatabase()-> Bool {
         var ok = false
-        if let DB = DB{
-            if DB.open(){
+        if let DB = DB {
+            if DB.open() {
                 ok = true
                 os_log("CSDL \(self.DB_NAME) mo thanh cong!")
-                
             }
             else {
                 os_log("CSDL \(self.DB_NAME) khong the mo!")
             }
-            
         }
         else {
             os_log("CSDL muon mo chua ton tai!")
-            
         }
         return ok
     }
-    
-    // 2. Dong csdl
+    // 2. Dong CSDL
     private func closeDatabase() {
         if let DB = DB {
             DB.close()
@@ -136,5 +136,25 @@ class FoodDatabase {
             closeDatabase()
         }
         return ok
+    }
+    // 2. Doc toan bo du lieu tu meals vao MealList
+    func readMeals(list: inout [Meal]) {
+        if openDatabase() && tableExits(TABLE_MEAL_NAME){
+            // Cau lenh sql
+            let sql = "SELECT * FROM \(TABLE_MEAL_NAME) ORDER BY \(MEAL_RATING) DESC"
+            var result:FMResultSet? = nil
+            // Thu hien truy van vao CSDL de doc cac mon an
+            do {
+                result = try DB!.executeQuery(sql, values: nil)
+            }
+            catch {
+                os_log("Khong the doc du lieu tu CSDL!")
+            }
+            
+            // Xu ly du lieu doc ve
+            if let result = result {
+                
+            }
+        }
     }
 }
