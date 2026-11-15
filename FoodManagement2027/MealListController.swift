@@ -15,15 +15,16 @@ class MealListController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var navigationBar: UINavigationBar!
-    
+    // Doi tuong CSDL
+    private let dao = FoodDatabase()
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // 1. Them du lieu mau cho datasource
-        if let meal1 = Meal(name: "Ca ran", image: UIImage(named: "default"), rating: 4) {
-            mealList.append(meal1)
-        }
+        // Them du lieu gia cho datasource
+        /*if let meal = Meal(name: "Ca ran", image: UIImage(named: "default"), rating: 4) {
+            mealList.append(meal)
+        }*/
         
         // 2. Dang ky myCell (xib) cho doi tuong table view
         let cellNib = UINib(nibName: "myCell", bundle: nil)
