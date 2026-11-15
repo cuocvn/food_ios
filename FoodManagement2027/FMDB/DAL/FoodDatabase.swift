@@ -113,7 +113,7 @@ class FoodDatabase {
         var ok = false
         if openDatabase() && tableExits(TABLE_MEAL_NAME){
             // Cau lenh sql
-            let sql = "INSERT INTO \(TABLE_MEAL_NAME) (\(MEAL_NAME), \(MEAL_IMAGE), \(MEAL_RATING)) VALUES (?, ?, ?)"
+            //let sql = "INSERT INTO \(TABLE_MEAL_NAME) (\(MEAL_NAME), \(MEAL_IMAGE), \(MEAL_RATING)) VALUES (?, ?, ?)"
             // Chuyen anh cua mon an thanh String truoc khi luu vao bang meals
             var strImage = ""
             if let image = meal.image {
@@ -122,8 +122,10 @@ class FoodDatabase {
                 // B2. Chuyen dataImage thanh String
                 strImage = dataImage.base64EncodedString(options: .lineLength64Characters)
             }
+            let sql = "INSERT INTO \(TABLE_MEAL_NAME) (\(MEAL_NAME), \(MEAL_IMAGE), \(MEAL_RATING)) VALUES ('\(meal.name)', '\(strImage)', \(meal.rating))"
             // Thuc hien cau lenh ghi doi tuong meal vao CSDL trong bang meals
-            if DB!.executeUpdate(sql, withArgumentsIn: [meal.name, strImage, meal.rating]) {
+            //if DB!.executeUpdate(sql, withArgumentsIn: [meal.name, strImage, meal.rating]) {
+            if DB!.executeStatements(sql) {
                 ok = true
                 os_log("Ghi doi tuong mon an \(meal.name) vao CSDL thanh cong!")
             }
