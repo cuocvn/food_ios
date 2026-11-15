@@ -156,6 +156,14 @@ class FoodDatabase {
                 while result.next() {
                     let name = result.string(forColumn: MEAL_NAME) ?? ""
                     let strImage = result.string(forColumn: MEAL_IMAGE)
+                    var image:UIImage? = nil
+                    // Chuyen anh tu String ve UIImage
+                    if let strImage = strImage {
+                        if !strImage.isEmpty {
+                            // B1. Chuyen String thanh Data
+                            let data = Data(base64Encoded: strImage, options: .ignoreUnknownCharacters)
+                        }
+                    }
                     let rating = result.int(forColumn: MEAL_RATING)
                 }
             }
